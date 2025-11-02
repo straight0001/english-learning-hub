@@ -4,137 +4,327 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>English Learning Hub</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', Tahoma, sans-serif; background: linear-gradient(to bottom right, #f1f5f9, #dbeafe, #f3e8ff); min-height: 100vh; }
+    header { background: linear-gradient(to right, #2563eb, #a855f7); color: white; padding: 1rem; position: sticky; top: 0; z-index: 50; }
+    .header-content { max-width: 1280px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+    header h1 { font-size: 1.5rem; }
+    nav { background: white; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+    .nav-content { max-width: 1280px; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; padding: 1rem; }
+    .nav-btn { padding: 0.5rem 1.5rem; border-radius: 0.5rem; font-weight: 600; border: none; cursor: pointer; }
+    .nav-btn.active { background: #2563eb; color: white; }
+    .nav-btn.inactive { background: #f3f4f6; }
+    main { max-width: 1280px; margin: 0 auto; padding: 1rem; }
+    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
+    .stat-card { background: white; border-radius: 0.5rem; padding: 1rem; text-align: center; }
+    .stat-value { font-size: 2rem; font-weight: bold; margin-top: 0.5rem; }
+    .tab { display: none; }
+    .tab.active { display: block; }
+    .unit-header { background: linear-gradient(to right, #3b82f6, #a855f7); color: white; border-radius: 0.5rem; padding: 2rem; margin-bottom: 1.5rem; }
+    .unit-header h2 { font-size: 2.25rem; margin-bottom: 1rem; }
+    .card { background: white; border-radius: 0.5rem; padding: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 1.5rem; }
+    .card h3 { font-size: 1.5rem; margin-bottom: 1rem; }
+    table { width: 100%; border-collapse: collapse; overflow-x: auto; }
+    th { background: linear-gradient(to right, #3b82f6, #a855f7); color: white; padding: 0.75rem; text-align: left; }
+    td { border: 1px solid #e5e7eb; padding: 0.75rem; }
+    tr:nth-child(even) { background: #f0f4ff; }
+    .btn { background: #3b82f6; color: white; padding: 0.5rem 1rem; border: none; border-radius: 0.25rem; cursor: pointer; }
+    .btn:hover { background: #2563eb; }
+    .complete-btn { width: 100%; background: linear-gradient(to right, #3b82f6, #a855f7); color: white; padding: 0.75rem; margin-top: 1.5rem; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; }
+    .unit-card { border-radius: 0.5rem; padding: 1.5rem; color: white; cursor: pointer; transition: transform 0.3s; }
+    .unit-card:hover { transform: scale(1.05); }
+    .exercise { border-left: 4px solid #fbbf24; padding-left: 1rem; margin-bottom: 1.5rem; }
+    .exercise-q { background: #fef3c7; padding: 1rem; border-radius: 0.25rem; margin-bottom: 0.75rem; }
+    .exercise-a { background: #dcfce7; padding: 0.75rem; border-radius: 0.25rem; color: #166534; font-weight: 600; }
+    input[type="text"] { width: 100%; padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 0.25rem; margin-bottom: 0.75rem; }
+  </style>
 </head>
-<body class="bg-gradient-to-br from-slate-100 via-blue-50 to-purple-50">
-  <header class="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-4 sticky top-0 z-50 shadow-lg">
-    <div class="max-w-7xl mx-auto flex justify-between items-center">
-      <h1 class="text-3xl font-bold">📚 English Learning Hub</h1>
-      <button onclick="toggleMenu()" class="md:hidden text-2xl">☰</button>
+<body>
+  <header>
+    <div class="header-content">
+      <h1>📚 English Learning Hub</h1>
     </div>
   </header>
 
-  <nav id="navbar" class="hidden md:block bg-white shadow-md">
-    <div class="max-w-7xl mx-auto flex flex-wrap justify-center gap-2 p-3">
-      <button onclick="showTab('today')" class="px-4 py-2 rounded bg-blue-600 text-white font-bold">Today</button>
-      <button onclick="showTab('units')" class="px-4 py-2 rounded bg-gray-100 hover:bg-gray-200 font-bold">All Units</button>
-      <button onclick="showTab('progress')" class="px-4 py-2 rounded bg-gray-100 hover:bg-gray-200 font-bold">Progress</button>
+  <nav>
+    <div class="nav-content">
+      <button class="nav-btn active" onclick="showTab('today')">Today</button>
+      <button class="nav-btn inactive" onclick="showTab('units')">All Units</button>
+      <button class="nav-btn inactive" onclick="showTab('progress')">Progress</button>
     </div>
   </nav>
 
-  <main class="max-w-7xl mx-auto p-4 pb-20">
-    <div class="grid grid-cols-3 gap-4 mb-6">
-      <div class="bg-white rounded-lg p-4 shadow-md text-center">
-        <p class="text-gray-600 text-sm">Streak</p>
-        <p id="streak" class="text-3xl font-bold text-blue-600">0</p>
+  <main>
+    <div class="stats">
+      <div class="stat-card">
+        <p>Streak</p>
+        <p class="stat-value" style="color: #2563eb;" id="streak">0</p>
       </div>
-      <div class="bg-white rounded-lg p-4 shadow-md text-center">
-        <p class="text-gray-600 text-sm">Today Points</p>
-        <p id="todayPoints" class="text-3xl font-bold text-green-600">0</p>
+      <div class="stat-card">
+        <p>Today Points</p>
+        <p class="stat-value" style="color: #16a34a;" id="points">0</p>
       </div>
-      <div class="bg-white rounded-lg p-4 shadow-md text-center">
-        <p class="text-gray-600 text-sm">Total Points</p>
-        <p id="totalPoints" class="text-3xl font-bold text-purple-600">0</p>
+      <div class="stat-card">
+        <p>Total Points</p>
+        <p class="stat-value" style="color: #7c3aed;" id="total">0</p>
       </div>
     </div>
 
-    <div id="today-tab" class="space-y-6">
-      <div class="bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg p-8 shadow-lg">
-        <h2 id="today-title" class="text-4xl font-bold mb-4">Unit 1: Local Community</h2>
-        <p id="today-level" class="text-blue-100">Level: Basic</p>
+    <div id="today-tab" class="tab active">
+      <div class="unit-header">
+        <h2 id="title">Unit 1: Local Community</h2>
+        <p id="level">Level: Basic</p>
       </div>
 
-      <div class="bg-white rounded-lg p-6 shadow-md overflow-x-auto">
-        <h3 class="text-2xl font-bold mb-4 text-gray-800">📚 Vocabulary</h3>
-        <table id="vocab-table" class="w-full border-collapse">
-          <tr class="bg-gradient-to-r from-blue-500 to-purple-500 text-white">
-            <th class="border p-3 text-left">Word</th>
-            <th class="border p-3 text-left">IPA</th>
-            <th class="border p-3 text-left">Audio</th>
-            <th class="border p-3 text-left">Vietnamese</th>
-            <th class="border p-3 text-left">Example</th>
-          </tr>
+      <div class="card">
+        <h3>📚 Vocabulary</h3>
+        <table id="vocabTable">
+          <thead>
+            <tr>
+              <th>Word</th>
+              <th>IPA</th>
+              <th>Audio</th>
+              <th>Vietnamese</th>
+              <th>Example</th>
+            </tr>
+          </thead>
+          <tbody id="vocabBody">
+          </tbody>
         </table>
       </div>
 
-      <div id="grammar-section" class="bg-white rounded-lg p-6 shadow-md"></div>
+      <div class="card">
+        <h3>📖 Grammar</h3>
+        <p id="grammar">Grammar content</p>
+      </div>
 
-      <div class="bg-white rounded-lg p-6 shadow-md">
-        <h3 class="text-2xl font-bold mb-4 text-gray-800">✏️ Exercises</h3>
-        <button onclick="toggleAnswers()" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded font-bold mb-4">Show Answers</button>
-        <div id="exercises-section"></div>
+      <div class="card">
+        <h3>✏️ Exercises</h3>
+        <button class="btn" onclick="toggleAnswers()">Show Answers</button>
+        <div id="exercisesDiv"></div>
+        <button class="complete-btn" onclick="complete()">✓ Complete</button>
       </div>
     </div>
 
-    <div id="units-tab" class="hidden">
-      <h2 class="text-3xl font-bold mb-6 text-gray-800">All 12 Units</h2>
-      <div id="units-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+    <div id="units-tab" class="tab">
+      <h2 style="margin-bottom: 1.5rem;">All Units</h2>
+      <div id="unitsGrid" class="grid"></div>
     </div>
 
-    <div id="progress-tab" class="hidden bg-white rounded-lg p-6 shadow-md">
-      <h2 class="text-3xl font-bold mb-6 text-gray-800">📊 Your Progress</h2>
-      <div id="progress-list"></div>
+    <div id="progress-tab" class="tab">
+      <div class="card">
+        <h2 style="margin-bottom: 1.5rem;">📊 Progress</h2>
+        <div id="progressDiv"></div>
+      </div>
     </div>
   </main>
 
   <script>
     const units = [
-      {id:1,title:'Unit 1: Local Community',level:'Basic',color:'from-blue-400 to-blue-600',progress:100,vocab:[{word:'Community',ipa:'/kəˈmjuːnəti/',vi:'Cộng đồng',ex:'Our community is friendly'},{word:'Neighbor',ipa:'/ˈneɪbər/',vi:'Hàng xóm',ex:'My neighbors are kind'},{word:'Local',ipa:'/ˈloʊkəl/',vi:'Địa phương',ex:'Local market'},{word:'Volunteer',ipa:'/ˌvɑːlənˈtɪr/',vi:'Tình nguyện',ex:'She volunteers'},{word:'Organize',ipa:'/ˈɔːrɡənaɪz/',vi:'Tổ chức',ex:'We organize events'},{word:'Gather',ipa:'/ˈɡæðər/',vi:'Tập hợp',ex:'We gather'},{word:'Support',ipa:'/səˈpɔːrt/',vi:'Hỗ trợ',ex:'Support each other'},{word:'Unite',ipa:'/juːˈnaɪt/',vi:'Liên kết',ex:'Communities unite'},{word:'Connection',ipa:'/kəˈnekʃn/',vi:'Kết nối',ex:'Strong connection'},{word:'Participate',ipa:'/pɑːrˈtɪsɪpeɪt/',vi:'Tham gia',ex:'Everyone participates'}],grammar:'Present Simple',exercises:[{q:'My __________ is friendly',a:'community'},{q:'We __________ at park',a:'gather'},{q:'There __________ volunteers',a:'are'},{q:'I __________ in community',a:'participate'},{q:'We __________ the event',a:'organize'}]},
-      {id:2,title:'Unit 2: City Life',level:'Intermediate',color:'from-green-400 to-green-600',progress:85,vocab:[{word:'City',ipa:'/ˈsɪti/',vi:'Thành phố',ex:'I live in city'},{word:'Urban',ipa:'/ˈɜːrbən/',vi:'Thành thị',ex:'Urban life'},{word:'Busy',ipa:'/ˈbɪzi/',vi:'Bận rộn',ex:'City is busy'},{word:'Convenient',ipa:'/kənˈviːniənt/',vi:'Tiện lợi',ex:'Very convenient'},{word:'Transport',ipa:'/ˈtrænspɔːrt/',vi:'Vận chuyển',ex:'Good transport'},{word:'Building',ipa:'/ˈbɪldɪŋ/',vi:'Tòa nhà',ex:'Tall buildings'},{word:'Traffic',ipa:'/ˈtræfɪk/',vi:'Giao thông',ex:'Heavy traffic'},{word:'Crowded',ipa:'/ˈkraʊdɪd/',vi:'Đông đúc',ex:'Streets crowded'},{word:'Noise',ipa:'/nɔɪz/',vi:'Tiếng ồn',ex:'Too much noise'},{word:'Opportunity',ipa:'/ˌɑːpərˈtuːnəti/',vi:'Cơ hội',ex:'Many opportunities'}],grammar:'Present Continuous',exercises:[{q:'City life is __________',a:'convenient'},{q:'Heavy __________',a:'traffic'},{q:'Streets __________',a:'crowded'},{q:'Public __________ good',a:'transport'},{q:'I __________ in city',a:'live'}]},
-      {id:3,title:'Unit 3: Healthy Living',level:'Intermediate',color:'from-red-400 to-red-600',progress:100,vocab:[{word:'Healthy',ipa:'/ˈhelθi/',vi:'Khỏe mạnh',ex:'Healthy lifestyle'},{word:'Exercise',ipa:'/ˈeksəsaɪz/',vi:'Tập thể dục',ex:'I exercise daily'},{word:'Diet',ipa:'/ˈdaɪət/',vi:'Chế độ ăn',ex:'Balanced diet'},{word:'Nutrition',ipa:'/njuːˈtrɪʃn/',vi:'Dinh dưỡng',ex:'Good nutrition'},{word:'Calorie',ipa:'/ˈkæləri/',vi:'Calo',ex:'80 calories'},{word:'Vitamin',ipa:'/ˈvɪtəmɪn/',vi:'Vitamin',ex:'Rich vitamins'},{word:'Protein',ipa:'/ˈprəʊtiːn/',vi:'Protein',ex:'Good protein'},{word:'Junk Food',ipa:'/dʒʌŋk fuːd/',vi:'Thức ăn bẩn',ex:'Bad health'},{word:'Stress',ipa:'/stres/',vi:'Căng thẳng',ex:'Too much stress'},{word:'Sleep',ipa:'/sliːp/',vi:'Ngủ',ex:'8 hours sleep'}],grammar:'Should/Have to',exercises:[{q:'You __________ eat vegetables',a:'should'},{q:'I __________ wake up early',a:'have to'},{q:'He __________ eat junk',a:"shouldn't"},{q:'Athletes __________ train',a:'have to'},{q:'You __________ follow diet',a:"don't have to"}]},
-      {id:4,title:'Unit 4: Remembering Past',level:'Intermediate+',color:'from-purple-400 to-purple-600',progress:95,vocab:[{word:'Remember',ipa:'/rɪˈmembər/',vi:'Nhớ',ex:'I remember'},{word:'Forget',ipa:'/fərˈɡet/',vi:'Quên',ex:'Never forget'},{word:'Ancient',ipa:'/ˈeɪnʃənt/',vi:'Cổ đại',ex:'Ancient temples'},{word:'Monument',ipa:'/ˈmɑːnjumənt/',vi:'Tượng đài',ex:'Monument stands'},{word:'Heritage',ipa:'/ˈherɪtɪdʒ/',vi:'Di sản',ex:'Cultural heritage'},{word:'Tradition',ipa:'/trəˈdɪʃn/',vi:'Truyền thống',ex:'Family traditions'},{word:'Custom',ipa:'/ˈkʌstəm/',vi:'Phong tục',ex:'Local custom'},{word:'Festival',ipa:'/ˈfestɪvl/',vi:'Lễ hội',ex:'Tet festival'},{word:'Era',ipa:'/ˈɪrə/',vi:'Thời kỳ',ex:'Stone Age'},{word:'Relic',ipa:'/ˈrelɪk/',vi:'Di vật',ex:'Ancient relic'}],grammar:'Simple Past',exercises:[{q:'I __________ temple yesterday',a:'visited'},{q:'She __________ every summer',a:'used to visit'},{q:'They __________ ancient city',a:'explored'},{q:'We __________ remember that',a:'will never'},{q:'He __________ traditions',a:'preserved'}]},
-      {id:5,title:'Unit 5: Our Experiences',level:'Intermediate+',color:'from-yellow-400 to-yellow-600',progress:60,vocab:[{word:'Experience',ipa:'/ɪkˈspɪriəns/',vi:'Kinh nghiệm',ex:'Great experience'},{word:'Adventure',ipa:'/ədˈventʃər/',vi:'Phiêu lưu',ex:'Amazing adventure'},{word:'Journey',ipa:'/ˈdʒɜːrni/',vi:'Chuyến đi',ex:'Long journey'},{word:'Discover',ipa:'/dɪsˈkʌvər/',vi:'Khám phá',ex:'Discover places'},{word:'Explore',ipa:'/ɪkˈsplɔːr/',vi:'Khám phá',ex:'Explore city'},{word:'Enjoy',ipa:'/ɪnˈdʒɔɪ/',vi:'Thích',ex:'Enjoy movie'},{word:'Exciting',ipa:'/ɪkˈsaɪtɪŋ/',vi:'Thú vị',ex:'Exciting trip'},{word:'Memorable',ipa:'/ˈmemərəbl/',vi:'Đáng nhớ',ex:'Memorable day'},{word:'Impression',ipa:'/ɪmˈpreʃn/',vi:'Ấn tượng',ex:'Good impression'},{word:'Unforgettable',ipa:'/ˌʌnfərˈɡetəbl/',vi:'Không thể quên',ex:'Unforgettable'}],grammar:'Present Perfect',exercises:[{q:'We had __________ trip',a:'exciting'},{q:'I __________ vacation',a:'enjoyed'},{q:'That was __________',a:'memorable'},{q:'Never __________ it',a:'forget'},{q:'__________ was wonderful',a:'Experience'}]},
-      {id:6,title:'Unit 6: Vietnamese Lifestyle',level:'Advanced',color:'from-pink-400 to-pink-600',progress:0,vocab:[{word:'Lifestyle',ipa:'/ˈlaɪfstaɪl/',vi:'Lối sống',ex:'Unique lifestyle'},{word:'Modern',ipa:'/ˈmɑːdərn/',vi:'Hiện đại',ex:'Modern life'},{word:'Traditional',ipa:'/trəˈdɪʃənl/',vi:'Truyền thống',ex:'Traditional values'},{word:'Change',ipa:'/tʃeɪndʒ/',vi:'Thay đổi',ex:'Things changed'},{word:'Adapt',ipa:'/əˈdæpt/',vi:'Thích ứng',ex:'Adapt new'},{word:'Develop',ipa:'/dɪˈveləp/',vi:'Phát triển',ex:'Country develops'},{word:'Improve',ipa:'/ɪmˈpruːv/',vi:'Cải thiện',ex:'Life improved'},{word:'Influence',ipa:'/ˈɪnfluəns/',vi:'Ảnh hưởng',ex:'Global influence'},{word:'Preserve',ipa:'/prɪˈzɜːrv/',vi:'Bảo tồn',ex:'Preserve culture'},{word:'Progress',ipa:'/ˈprɑːɡres/',vi:'Tiến bộ',ex:'Social progress'}],grammar:'Comparatives',exercises:[{q:'__________ is unique',a:'Lifestyle'},{q:'More __________ before',a:'traditional'},{q:'Technology __________ us',a:'changed'},{q:'Must __________ traditions',a:'preserve'},{q:'__________ rapidly',a:'Developing'}]},
-      {id:7,title:'Unit 7: Natural Wonders',level:'Advanced',color:'from-indigo-400 to-indigo-600',progress:0,vocab:[{word:'Wonder',ipa:'/ˈwʌndər/',vi:'Kỳ quan',ex:'World wonder'},{word:'Natural',ipa:'/ˈnætʃərəl/',vi:'Tự nhiên',ex:'Natural beauty'},{word:'Landscape',ipa:'/ˈlændskeɪp/',vi:'Cảnh quan',ex:'Beautiful landscape'},{word:'Spectacular',ipa:'/spekˈtækjələr/',vi:'Tuyệt đẹp',ex:'Spectacular view'},{word:'Breathtaking',ipa:'/ˈbreθteɪkɪŋ/',vi:'Ngoạn mục',ex:'Breathtaking view'},{word:'Majestic',ipa:'/məˈdʒestɪk/',vi:'Hùng vĩ',ex:'Majestic mountains'},{word:'Magnificent',ipa:'/mæɡˈnɪfɪsnt/',vi:'Tuyệt vời',ex:'Magnificent place'},{word:'Unique',ipa:'/juːˈniːk/',vi:'Độc đáo',ex:'Unique place'},{word:'Rare',ipa:'/rer/',vi:'Hiếm',ex:'Rare species'},{word:'Preserve',ipa:'/prɪˈzɜːrv/',vi:'Bảo tồn',ex:'Preserve nature'}],grammar:'Superlatives',exercises:[{q:'__________ amazing',a:'Landscape'},{q:'View is __________',a:'spectacular'},{q:'Animals are __________',a:'rare'},{q:'Must __________ places',a:'preserve'},{q:'__________ beautiful',a:'Scenery'}]},
-      {id:8,title:'Unit 8: Tourism',level:'Advanced',color:'from-cyan-400 to-cyan-600',progress:0,vocab:[{word:'Tourism',ipa:'/ˈtʊrɪzəm/',vi:'Du lịch',ex:'Tourism important'},{word:'Tourist',ipa:'/ˈtʊrɪst/',vi:'Du khách',ex:'Many tourists'},{word:'Destination',ipa:'/ˌdestɪˈneɪʃn/',vi:'Điểm đến',ex:'Popular destination'},{word:'Attraction',ipa:'/əˈtrækʃn/',vi:'Điểm thu hút',ex:'Main attraction'},{word:'Accommodation',ipa:'/əˌkɑːməˈdeɪʃn/',vi:'Chỗ ở',ex:'Good accommodation'},{word:'Sightseeing',ipa:'/ˈsaɪtsiːɪŋ/',vi:'Tham quan',ex:'Sightseeing tour'},{word:'Itinerary',ipa:'/aɪˈtɪnəreri/',vi:'Lịch trình',ex:'Planned itinerary'},{word:'Package',ipa:'/ˈpækɪdʒ/',vi:'Gói tour',ex:'Holiday package'},{word:'Scenic',ipa:'/ˈseniːk/',vi:'Cảnh đẹp',ex:'Scenic route'},{word:'Memorable',ipa:'/ˈmemərəbl/',vi:'Đáng nhớ',ex:'Memorable trip'}],grammar:'Modals',exercises:[{q:'__________ important',a:'Tourism'},{q:'Many __________ visit',a:'tourists'},{q:'Popular __________',a:'destination'},{q:'Main __________ temples',a:'attractions'},{q:'Holiday __________',a:'package'}]},
-      {id:9,title:'Unit 9: World Englishes',level:'Advanced',color:'from-orange-400 to-orange-600',progress:0,vocab:[{word:'Language',ipa:'/ˈlæŋɡwɪdʒ/',vi:'Ngôn ngữ',ex:'New language'},{word:'English',ipa:'/ˈɪŋɡlɪʃ/',vi:'Tiếng Anh',ex:'Speak English'},{word:'Communicate',ipa:'/kəˈmjuːnɪkeɪt/',vi:'Giao tiếp',ex:'Communicate well'},{word:'Culture',ipa:'/ˈkʌltʃər/',vi:'Văn hóa',ex:'Culture matters'},{word:'Fluent',ipa:'/ˈfluːənt/',vi:'Thành thạo',ex:'Speak fluent'},{word:'Accent',ipa:'/ˈæksent/',vi:'Giọng',ex:'Strong accent'},{word:'Dialect',ipa:'/ˈdaɪəlekt/',vi:'Phương ngữ',ex:'Different dialect'},{word:'Vocabulary',ipa:'/vəˈkæbjuləri/',vi:'Từ vựng',ex:'Build vocabulary'},{word:'Grammar',ipa:'/ˈɡræmər/',vi:'Ngữ pháp',ex:'Study grammar'},{word:'Translate',ipa:'/trænzˈleɪt/',vi:'Dịch',ex:'Translate sentence'}],grammar:'Reported Speech',exercises:[{q:'Learning __________ useful',a:'language'},{q:'__________ in English',a:'Fluent'},{q:'__________ helps learn',a:'Grammar'},{q:'__________ important',a:'Vocabulary'},{q:'Strong __________',a:'accent'}]},
-      {id:10,title:'Unit 10: Planet Earth',level:'Advanced',color:'from-teal-400 to-teal-600',progress:0,vocab:[{word:'Planet',ipa:'/ˈplænɪt/',vi:'Hành tinh',ex:'Our planet'},{word:'Environment',ipa:'/ɪnˈvaɪrənmənt/',vi:'Môi trường',ex:'Protect environment'},{word:'Pollution',ipa:'/pəˈluːʃn/',vi:'Ô nhiễm',ex:'Air pollution'},{word:'Climate',ipa:'/ˈklaɪmət/',vi:'Khí hậu',ex:'Climate change'},{word:'Global Warming',ipa:'/ˈɡloʊbl ˈwɔːrmɪŋ/',vi:'Nóng lên',ex:'Global warming'},{word:'Species',ipa:'/ˈspiːʃiːz/',vi:'Loài',ex:'Endangered species'},{word:'Ecosystem',ipa:'/ˈiːkoʊsɪstəm/',vi:'Hệ sinh thái',ex:'Healthy ecosystem'},{word:'Renewable',ipa:'/rɪˈnjuːəbl/',vi:'Tái tạo',ex:'Renewable energy'},{word:'Sustainable',ipa:'/səˈsteɪnəbl/',vi:'Bền vững',ex:'Sustainable development'},{word:'Conservation',ipa:'/ˌkɑːnsərˈveɪʃn/',vi:'Bảo tồn',ex:'Conservation effort'}],grammar:'Conditionals',exercises:[{q:'Must __________ environment',a:'protect'},{q:'__________ problem',a:'Pollution'},{q:'__________ rising fast',a:'Temperature'},{q:'__________ energy',a:'Renewable'},{q:'__________ endangered',a:'Species'}]},
-      {id:11,title:'Unit 11: Electronic Devices',level:'Advanced',color:'from-rose-400 to-rose-600',progress:0,vocab:[{word:'Device',ipa:'/dɪˈvaɪs/',vi:'Thiết bị',ex:'Modern device'},{word:'Technology',ipa:'/tekˈnɑːlədʒi/',vi:'Công nghệ',ex:'Technology changes'},{word:'Internet',ipa:'/ˈɪntərnet/',vi:'Internet',ex:'Internet fast'},{word:'Digital',ipa:'/ˈdɪdʒɪtl/',vi:'Kỹ thuật số',ex:'Digital age'},{word:'Application',ipa:'/ˌæplɪˈkeɪʃn/',vi:'Ứng dụng',ex:'Useful applications'},{word:'Network',ipa:'/ˈnetwork/',vi:'Mạng',ex:'Global network'},{word:'Social Media',ipa:'/ˈsoʊʃl ˈmiːdiə/',vi:'Mạng xã hội',ex:'Social media'},{word:'Artificial Intelligence',ipa:'/ɑːrˌtɪfɪʃl ɪnˈtelɪdʒəns/',vi:'AI',ex:'AI developing'},{word:'Cyber',ipa:'/ˈsaɪbər/',vi:'Mạng',ex:'Cybersecurity'},{word:'Innovation',ipa:'/ˌɪnəˈveɪʃn/',vi:'Đổi mới',ex:'Constant innovation'}],grammar:'Future Tenses',exercises:[{q:'__________ everywhere',a:'Devices'},{q:'Technology __________',a:'changes'},{q:'__________ fast',a:'Internet'},{q:'__________ important',a:'Innovation'},{q:'__________ growing',a:'AI'}]},
-      {id:12,title:'Unit 12: Career Choices',level:'Advanced',color:'from-violet-400 to-violet-600',progress:0,vocab:[{word:'Career',ipa:'/kəˈrɪr/',vi:'Sự nghiệp',ex:'Plan career'},{word:'Job',ipa:'/dʒɑːb/',vi:'Công việc',ex:'Find job'},{word:'Skill',ipa:'/skɪl/',vi:'Kỹ năng',ex:'Develop skills'},{word:'Education',ipa:'/ˌedʒuˈkeɪʃn/',vi:'Giáo dục',ex:'Education important'},{word:'Qualification',ipa:'/ˌkwɑːlɪfɪˈkeɪʃn/',vi:'Bằng cấp',ex:'Good qualifications'},{word:'Interview',ipa:'/ˈɪntərvjuː/',vi:'Phỏng vấn',ex:'Job interview'},{word:'Resume',ipa:'/ˈrezumeɪ/',vi:'CV',ex:'Submit resume'},{word:'Opportunity',ipa:'/ˌɑːpərˈtuːnəti/',vi:'Cơ hội',ex:'Career opportunities'},{word:'Success',ipa:'/səkˈses/',vi:'Thành công',ex:'Success requires'},{word:'Achievement',ipa:'/əˈtʃiːvmənt/',vi:'Thành tích',ex:'Great achievements'}],grammar:'Present Perfect',exercises:[{q:'__________ is important',a:'Career'},{q:'Find __________ easily',a:'job'},{q:'Develop your __________',a:'skills'},{q:'Good __________',a:'qualifications'},{q:'__________ requires effort',a:'Success'}]}
+      {
+        id: 1,
+        title: "Unit 1: Local Community",
+        level: "Basic",
+        color: "linear-gradient(to right, rgb(96, 165, 250), rgb(37, 99, 235))",
+        progress: 100,
+        vocab: [
+          { word: "Community", ipa: "/kəˈmjuːnəti/", vi: "Cộng đồng", ex: "Our community is friendly" },
+          { word: "Neighbor", ipa: "/ˈneɪbər/", vi: "Hàng xóm", ex: "My neighbors are kind" },
+          { word: "Local", ipa: "/ˈloʊkəl/", vi: "Địa phương", ex: "Local market" },
+          { word: "Volunteer", ipa: "/ˌvɑːlənˈtɪr/", vi: "Tình nguyện", ex: "She volunteers" },
+          { word: "Organize", ipa: "/ˈɔːrɡənaɪz/", vi: "Tổ chức", ex: "We organize" },
+          { word: "Gather", ipa: "/ˈɡæðər/", vi: "Tập hợp", ex: "We gather" },
+          { word: "Support", ipa: "/səˈpɔːrt/", vi: "Hỗ trợ", ex: "Support each" },
+          { word: "Unite", ipa: "/juːˈnaɪt/", vi: "Liên kết", ex: "Unite together" },
+          { word: "Connection", ipa: "/kəˈnekʃn/", vi: "Kết nối", ex: "Strong connection" },
+          { word: "Participate", ipa: "/pɑːrˈtɪsɪpeɪt/", vi: "Tham gia", ex: "Everyone participates" }
+        ],
+        grammar: "Present Simple & There is/are",
+        exercises: [
+          { q: "My __________ is friendly", a: "community" },
+          { q: "We __________ at park", a: "gather" },
+          { q: "There __________ volunteers", a: "are" },
+          { q: "I __________ in community", a: "participate" },
+          { q: "We __________ events", a: "organize" }
+        ]
+      },
+      {
+        id: 2,
+        title: "Unit 2: City Life",
+        level: "Intermediate",
+        color: "linear-gradient(to right, rgb(74, 222, 128), rgb(34, 197, 94))",
+        progress: 85,
+        vocab: [
+          { word: "City", ipa: "/ˈsɪti/", vi: "Thành phố", ex: "Big city" },
+          { word: "Urban", ipa: "/ˈɜːrbən/", vi: "Thành thị", ex: "Urban life" },
+          { word: "Busy", ipa: "/ˈbɪzi/", vi: "Bận rộn", ex: "City is busy" },
+          { word: "Convenient", ipa: "/kənˈviːniənt/", vi: "Tiện lợi", ex: "Very convenient" },
+          { word: "Transport", ipa: "/ˈtrænspɔːrt/", vi: "Vận chuyển", ex: "Good transport" },
+          { word: "Building", ipa: "/ˈbɪldɪŋ/", vi: "Tòa nhà", ex: "Tall buildings" },
+          { word: "Traffic", ipa: "/ˈtræfɪk/", vi: "Giao thông", ex: "Heavy traffic" },
+          { word: "Crowded", ipa: "/ˈkraʊdɪd/", vi: "Đông đúc", ex: "Streets crowded" },
+          { word: "Noise", ipa: "/nɔɪz/", vi: "Tiếng ồn", ex: "Too much noise" },
+          { word: "Opportunity", ipa: "/ˌɑːpərˈtuːnəti/", vi: "Cơ hội", ex: "Many opportunities" }
+        ],
+        grammar: "Present Continuous",
+        exercises: [
+          { q: "City life is __________", a: "convenient" },
+          { q: "Heavy __________", a: "traffic" },
+          { q: "Streets __________", a: "crowded" },
+          { q: "Public __________ good", a: "transport" },
+          { q: "I __________ in city", a: "live" }
+        ]
+      },
+      {
+        id: 3,
+        title: "Unit 3: Healthy Living",
+        level: "Intermediate",
+        color: "linear-gradient(to right, rgb(248, 113, 113), rgb(220, 38, 38))",
+        progress: 100,
+        vocab: [
+          { word: "Healthy", ipa: "/ˈhelθi/", vi: "Khỏe mạnh", ex: "Healthy lifestyle" },
+          { word: "Exercise", ipa: "/ˈeksəsaɪz/", vi: "Tập thể dục", ex: "I exercise daily" },
+          { word: "Diet", ipa: "/ˈdaɪət/", vi: "Chế độ ăn", ex: "Balanced diet" },
+          { word: "Nutrition", ipa: "/njuːˈtrɪʃn/", vi: "Dinh dưỡng", ex: "Good nutrition" },
+          { word: "Calorie", ipa: "/ˈkæləri/", vi: "Calo", ex: "80 calories" },
+          { word: "Vitamin", ipa: "/ˈvɪtəmɪn/", vi: "Vitamin", ex: "Rich vitamins" },
+          { word: "Protein", ipa: "/ˈprəʊtiːn/", vi: "Protein", ex: "Good protein" },
+          { word: "Junk Food", ipa: "/dʒʌŋk fuːd/", vi: "Thức ăn bẩn", ex: "Bad health" },
+          { word: "Stress", ipa: "/stres/", vi: "Căng thẳng", ex: "Too much stress" },
+          { word: "Sleep", ipa: "/sliːp/", vi: "Ngủ", ex: "8 hours sleep" }
+        ],
+        grammar: "Should/Have to",
+        exercises: [
+          { q: "You __________ eat vegetables", a: "should" },
+          { q: "I __________ wake up early", a: "have to" },
+          { q: "He __________ eat junk", a: "shouldn't" },
+          { q: "Athletes __________ train", a: "have to" },
+          { q: "You __________ follow diet", a: "don't have to" }
+        ]
+      },
+      {
+        id: 4,
+        title: "Unit 4: Remembering Past",
+        level: "Intermediate+",
+        color: "linear-gradient(to right, rgb(196, 181, 253), rgb(168, 85, 247))",
+        progress: 95,
+        vocab: [
+          { word: "Remember", ipa: "/rɪˈmembər/", vi: "Nhớ", ex: "I remember" },
+          { word: "Forget", ipa: "/fərˈɡet/", vi: "Quên", ex: "Never forget" },
+          { word: "Ancient", ipa: "/ˈeɪnʃənt/", vi: "Cổ đại", ex: "Ancient temples" },
+          { word: "Monument", ipa: "/ˈmɑːnjumənt/", vi: "Tượng đài", ex: "Monument stands" },
+          { word: "Heritage", ipa: "/ˈherɪtɪdʒ/", vi: "Di sản", ex: "Cultural heritage" },
+          { word: "Tradition", ipa: "/trəˈdɪʃn/", vi: "Truyền thống", ex: "Family traditions" },
+          { word: "Custom", ipa: "/ˈkʌstəm/", vi: "Phong tục", ex: "Local custom" },
+          { word: "Festival", ipa: "/ˈfestɪvl/", vi: "Lễ hội", ex: "Tet festival" },
+          { word: "Era", ipa: "/ˈɪrə/", vi: "Thời kỳ", ex: "Stone Age" },
+          { word: "Relic", ipa: "/ˈrelɪk/", vi: "Di vật", ex: "Ancient relic" }
+        ],
+        grammar: "Simple Past",
+        exercises: [
+          { q: "I __________ temple yesterday", a: "visited" },
+          { q: "She __________ every summer", a: "used to visit" },
+          { q: "They __________ ancient city", a: "explored" },
+          { q: "We __________ remember that", a: "will never" },
+          { q: "He __________ traditions", a: "preserved" }
+        ]
+      }
     ];
 
-    let currentUnitId = 1;
-    let showingAnswers = false;
+    let currentUnit = units[0];
+    let showAnswers = false;
+    let stats = { streak: 0, points: 0, total: 0 };
 
-    function getCurrentUnit() {
-      return units.find(u => u.id === currentUnitId);
+    function renderVocab() {
+      const tbody = document.getElementById("vocabBody");
+      tbody.innerHTML = "";
+      currentUnit.vocab.forEach((v, i) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td style="color: #2563eb; font-weight: bold;">${v.word}</td>
+          <td style="font-size: 0.875rem; font-family: monospace;">${v.ipa}</td>
+          <td><button class="btn" onclick="playAudio('${v.word}')">🔊</button></td>
+          <td>${v.vi}</td>
+          <td>"${v.ex}"</td>
+        `;
+        tbody.appendChild(tr);
+      });
     }
 
     function playAudio(text) {
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'en-US';
-      window.speechSynthesis.speak(utterance);
-    }
-
-    function renderVocabTable() {
-      const unit = getCurrentUnit();
-      if (!unit) return;
-      const table = document.getElementById('vocab-table');
-      table.innerHTML = '<tr class="bg-gradient-to-r from-blue-500 to-purple-500 text-white"><th class="border p-3 text-left">Word</th><th class="border p-3 text-left">IPA</th><th class="border p-3 text-left">Audio</th><th class="border p-3 text-left">Vietnamese</th><th class="border p-3 text-left">Example</th></tr>';
-      unit.vocab.forEach(v => {
-        table.innerHTML += `<tr class="border"><td class="border p-3 font-bold text-blue-600">${v.word}</td><td class="border p-3 text-sm font-mono">${v.ipa}</td><td class="border p-3"><button onclick="playAudio('${v.word}')" class="bg-blue-500 text-white px-3 py-1 rounded text-sm">🔊</button></td><td class="border p-3">${v.vi}</td><td class="border p-3 text-sm italic">"${v.ex}"</td></tr>`;
-      });
-    }
-
-    function renderGrammar() {
-      const unit = getCurrentUnit();
-      if (!unit) return;
-      const section = document.getElementById('grammar-section');
-      section.innerHTML = `<h3 class="text-2xl font-bold mb-4 text-gray-800">📖 Grammar: ${unit.grammar}</h3><p class="text-gray-700">Master the grammar rules for this unit. Focus on understanding the structure and practicing with examples.</p>`;
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = "en-US";
+      speechSynthesis.speak(u);
     }
 
     function renderExercises() {
-      const unit = getCurrentUnit();
-      if (!unit) return;
-      const section = document.getElementById('exercises-section');
-      section.innerHTML = '';
-      unit.exercises.forEach((ex, idx) => {
-        section.innerHTML += `<div class="border-l-4 border-yellow-500 pl-4 pb-4 mb-4"><p class="font-bold mb-2">Exercise ${idx + 1}:</p><p class="text-gray-700 mb-3">${ex.q}</p><input type="text" placeholder="Your answer" class="w-full p-2 border rounded mb-3 text-sm">${showingAnswers ? `<div class="bg-green-100 p-3 rounded text-sm"><p class="font-bold text-green-700">✓ Answer: ${ex.a}</p></div>` : ''}</div>`;
+      const div = document.getElementById("exercisesDiv");
+      div.innerHTML = "";
+      currentUnit.exercises.forEach((e, i) => {
+        const ex = document.createElement("div");
+        ex.className = "exercise";
+        ex.innerHTML = `
+          <div class="exercise-q">${e.q}</div>
+          <input type="text" id="ans${i}" placeholder="Answer">
+          ${showAnswers ? `<div class="exercise-a">✓ ${e.a}</div>` : ""}
+        `;
+        div.appendChild(ex);
       });
     }
 
-    function renderUnitsGrid() {
-      const grid = document.getElementById('units-grid');
-      grid.innerHTML = '';
-      units.forEach(unit => {
-        grid.innerHTML += `<div onclick="switchUnit(${unit.id})" class="bg-gradient-to-br ${unit.color} text-white rounded-lg p-6 shadow-lg cursor-pointer hover:shadow-xl transition"><h3 class="font-bold text-lg mb-
+    function renderAll() {
+      document.getElementById("title").textContent = currentUnit.title;
+      document.getElementById("level").textContent = `Level: ${currentUnit.level}`;
+      document.getElementById("grammar").textContent = currentUnit.grammar;
+      renderVocab();
+      renderExercises();
+    }
+
+    function showTab(tab) {
+      document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+      if (tab === "today") {
+        document.getElementById("today-tab").classList.add("active");
+        renderAll();
+      } else if (tab === "units") {
+        document.getElementById("units-tab").classList.add("active");
+        const grid = document.getElementById("unitsGrid");
+        grid.innerHTML = "";
+        units.forEach(u => {
+          const card = document.createElement("div");
+          card.className = "unit-card";
+          card.style.background = u.color;
+          card.onclick = () => {
+            currentUnit = u;
+            showTab("today");
+          };
+          card.innerHTML = `<h4>${u.title}</h4><p>${u.level}</p><div style="margin-top: 0.5rem;">${u.progress}% Complete</div>`;
+          grid.appendChild(card);
+        });
+      } else if (tab === "progress") {
+        document.getElementById("progress-tab").classList.add("active");
+        const div = document.getElementById("progressDiv");
+        div.innerHTML = units.map(u => `<p>${u.title}: ${u.progress}%</p>`).join("");
+      }
+    }
+
+    function toggleAnswers() {
+      showAnswers = !showAnswers;
+      renderExercises();
+    }
+
+    function complete() {
+      stats.streak++;
+      stats.points += 50;
+      stats.total += 50;
+      document.getElementById("streak").textContent = stats.streak;
+      document.getElementById("points").textContent = stats.points;
+      document.getElementById("total").textContent = stats.total;
+      alert("🎉 Great job! +50 points!");
+    }
+
+    renderAll();
+  </script>
+</body>
+</html>
