@@ -25,20 +25,20 @@
     .unit-header h2 { font-size: 2.25rem; margin-bottom: 1rem; }
     .card { background: white; border-radius: 0.5rem; padding: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 1.5rem; }
     .card h3 { font-size: 1.5rem; margin-bottom: 1rem; }
-    table { width: 100%; border-collapse: collapse; overflow-x: auto; }
-    th { background: linear-gradient(to right, #3b82f6, #a855f7); color: white; padding: 0.75rem; text-align: left; }
-    td { border: 1px solid #e5e7eb; padding: 0.75rem; }
+    table { width: 100%; border-collapse: collapse; }
+    th { background: linear-gradient(to right, #3b82f6, #a855f7); color: white; padding: 0.75rem; text-align: left; font-size: 0.875rem; }
+    td { border: 1px solid #e5e7eb; padding: 0.75rem; font-size: 0.875rem; }
     tr:nth-child(even) { background: #f0f4ff; }
-    .btn { background: #3b82f6; color: white; padding: 0.5rem 1rem; border: none; border-radius: 0.25rem; cursor: pointer; }
+    .btn { background: #3b82f6; color: white; padding: 0.5rem 1rem; border: none; border-radius: 0.25rem; cursor: pointer; font-size: 0.875rem; }
     .btn:hover { background: #2563eb; }
-    .complete-btn { width: 100%; background: linear-gradient(to right, #3b82f6, #a855f7); color: white; padding: 0.75rem; margin-top: 1.5rem; }
+    .complete-btn { width: 100%; background: linear-gradient(to right, #3b82f6, #a855f7); color: white; padding: 0.75rem; margin-top: 1.5rem; cursor: pointer; border: none; font-weight: 600; }
     .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; }
     .unit-card { border-radius: 0.5rem; padding: 1.5rem; color: white; cursor: pointer; transition: transform 0.3s; }
     .unit-card:hover { transform: scale(1.05); }
     .exercise { border-left: 4px solid #fbbf24; padding-left: 1rem; margin-bottom: 1.5rem; }
     .exercise-q { background: #fef3c7; padding: 1rem; border-radius: 0.25rem; margin-bottom: 0.75rem; }
     .exercise-a { background: #dcfce7; padding: 0.75rem; border-radius: 0.25rem; color: #166534; font-weight: 600; }
-    input[type="text"] { width: 100%; padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 0.25rem; margin-bottom: 0.75rem; }
+    input[type="text"] { width: 100%; padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 0.25rem; margin-bottom: 0.75rem; font-size: 0.875rem; }
   </style>
 </head>
 <body>
@@ -97,19 +97,19 @@
 
       <div class="card">
         <h3>📖 Grammar</h3>
-        <p id="grammar">Grammar content</p>
+        <div id="grammarDiv"></div>
       </div>
 
       <div class="card">
         <h3>✏️ Exercises</h3>
         <button class="btn" onclick="toggleAnswers()">Show Answers</button>
         <div id="exercisesDiv"></div>
-        <button class="complete-btn" onclick="complete()">✓ Complete</button>
+        <button class="complete-btn" onclick="complete()">✓ Complete Lesson</button>
       </div>
     </div>
 
     <div id="units-tab" class="tab">
-      <h2 style="margin-bottom: 1.5rem;">All Units</h2>
+      <h2 style="margin-bottom: 1.5rem;">All 12 Units</h2>
       <div id="unitsGrid" class="grid"></div>
     </div>
 
@@ -124,52 +124,33 @@
   <script>
     const units = [
       {
-        id: 1,
-        title: "Unit 1: Local Community",
-        level: "Basic",
-        color: "linear-gradient(to right, rgb(96, 165, 250), rgb(37, 99, 235))",
-        progress: 100,
+        id: 1, title: "Unit 1: Local Community", level: "Basic", color: "linear-gradient(to right, #60a5fa, #2563eb)", progress: 100,
         vocab: [
           { word: "Community", ipa: "/kəˈmjuːnəti/", vi: "Cộng đồng", ex: "Our community is friendly" },
           { word: "Neighbor", ipa: "/ˈneɪbər/", vi: "Hàng xóm", ex: "My neighbors are kind" },
           { word: "Local", ipa: "/ˈloʊkəl/", vi: "Địa phương", ex: "Local market" },
           { word: "Volunteer", ipa: "/ˌvɑːlənˈtɪr/", vi: "Tình nguyện", ex: "She volunteers" },
-          { word: "Organize", ipa: "/ˈɔːrɡənaɪz/", vi: "Tổ chức", ex: "We organize" },
-          { word: "Gather", ipa: "/ˈɡæðər/", vi: "Tập hợp", ex: "We gather" },
-          { word: "Support", ipa: "/səˈpɔːrt/", vi: "Hỗ trợ", ex: "Support each" },
+          { word: "Organize", ipa: "/ˈɔːrɡənaɪz/", vi: "Tổ chức", ex: "We organize events" },
+          { word: "Gather", ipa: "/ˈɡæðər/", vi: "Tập hợp", ex: "We gather together" },
+          { word: "Support", ipa: "/səˈpɔːrt/", vi: "Hỗ trợ", ex: "Support each other" },
           { word: "Unite", ipa: "/juːˈnaɪt/", vi: "Liên kết", ex: "Unite together" },
           { word: "Connection", ipa: "/kəˈnekʃn/", vi: "Kết nối", ex: "Strong connection" },
           { word: "Participate", ipa: "/pɑːrˈtɪsɪpeɪt/", vi: "Tham gia", ex: "Everyone participates" }
         ],
-        grammar: "Present Simple & There is/are",
-        grammarDetail: `
-          <h4>📌 Present Simple (Hiện tại đơn)</h4>
-          <p><strong>Cấu trúc:</strong> S + V (bare)</p>
-          <p><strong>Ví dụ:</strong> I volunteer in my community.</p>
-          <p><strong>Dùng khi:</strong> Hành động xảy ra thường xuyên</p>
-          
-          <h4 style="margin-top: 1rem;">📌 There is / There are</h4>
-          <p><strong>Cấu trúc:</strong> There is + N (singular) / There are + N (plural)</p>
-          <p><strong>Ví dụ:</strong> There is a community center. / There are many volunteers.</p>
-          <p><strong>Dùng khi:</strong> Chỉ sự tồn tại của người/vật</p>
-        `,
+        grammar: "<h4>Present Simple & There is/are</h4><p><strong>Structure:</strong> S + V (bare) / There is/are + N</p><p><strong>Example:</strong> I volunteer. / There are 10 volunteers.</p><p><strong>When:</strong> Habitual actions or existence</p>",
         exercises: [
-          { q: "My __________ is friendly", type: "fill", a: "community", options: [] },
-          { q: "Which word means 'Tình nguyện viên'?", type: "choice", a: "volunteer", options: ["neighbor", "volunteer", "local", "organize"] },
-          { q: "We __________ at the park every week", type: "fill", a: "gather", options: [] },
-          { q: "'There are many people' - 'are' ở đây dùng vì?", type: "choice", a: "plural", options: ["singular", "plural", "past tense", "negative"] },
-          { q: "I __________ in community activities", type: "fill", a: "participate", options: [] }
+          { q: "My __________ is friendly", a: "community" },
+          { q: "We __________ at the park every week", a: "gather" },
+          { q: "I __________ in community activities", a: "participate" },
+          { q: "There __________ many volunteers here", a: "are" },
+          { q: "She __________ the event last month", a: "organized" }
         ]
       },
       {
-        id: 2,
-        title: "Unit 2: City Life",
-        level: "Intermediate",
-        color: "linear-gradient(to right, rgb(74, 222, 128), rgb(34, 197, 94))",
-        progress: 85,
+        id: 2, title: "Unit 2: City Life", level: "Intermediate", color: "linear-gradient(to right, #4ade80, #22c55e)", progress: 85,
         vocab: [
-          { word: "City", ipa: "/ˈsɪti/", vi: "Thành phố", ex: "Big city" },
-          { word: "Urban", ipa: "/ˈɜːrbən/", vi: "Thành thị", ex: "Urban life" },
+          { word: "City", ipa: "/ˈsɪti/", vi: "Thành phố", ex: "Big city life" },
+          { word: "Urban", ipa: "/ˈɜːrbən/", vi: "Thành thị", ex: "Urban development" },
           { word: "Busy", ipa: "/ˈbɪzi/", vi: "Bận rộn", ex: "City is busy" },
           { word: "Convenient", ipa: "/kənˈviːniənt/", vi: "Tiện lợi", ex: "Very convenient" },
           { word: "Transport", ipa: "/ˈtrænspɔːrt/", vi: "Vận chuyển", ex: "Good transport" },
@@ -179,21 +160,17 @@
           { word: "Noise", ipa: "/nɔɪz/", vi: "Tiếng ồn", ex: "Too much noise" },
           { word: "Opportunity", ipa: "/ˌɑːpərˈtuːnəti/", vi: "Cơ hội", ex: "Many opportunities" }
         ],
-        grammar: "Present Continuous",
+        grammar: "<h4>Present Continuous & Comparatives</h4><p><strong>Structure:</strong> S + am/is/are + V-ing / S + more/er adj + than</p><p><strong>Example:</strong> Cities are growing. / Cities are busier than villages.</p><p><strong>When:</strong> Current actions or comparing two things</p>",
         exercises: [
-          { q: "City life is __________", a: "convenient" },
-          { q: "Heavy __________", a: "traffic" },
-          { q: "Streets __________", a: "crowded" },
-          { q: "Public __________ good", a: "transport" },
-          { q: "I __________ in city", a: "live" }
+          { q: "City life is __________ than village life", a: "busier" },
+          { q: "Public __________ is very convenient", a: "transport" },
+          { q: "The streets are very __________", a: "crowded" },
+          { q: "There is too much __________ in the city", a: "noise" },
+          { q: "Many people __________ moving to cities", a: "are" }
         ]
       },
       {
-        id: 3,
-        title: "Unit 3: Healthy Living",
-        level: "Intermediate",
-        color: "linear-gradient(to right, rgb(248, 113, 113), rgb(220, 38, 38))",
-        progress: 100,
+        id: 3, title: "Unit 3: Healthy Living", level: "Intermediate", color: "linear-gradient(to right, #f87171, #dc2626)", progress: 100,
         vocab: [
           { word: "Healthy", ipa: "/ˈhelθi/", vi: "Khỏe mạnh", ex: "Healthy lifestyle" },
           { word: "Exercise", ipa: "/ˈeksəsaɪz/", vi: "Tập thể dục", ex: "I exercise daily" },
@@ -202,25 +179,21 @@
           { word: "Calorie", ipa: "/ˈkæləri/", vi: "Calo", ex: "80 calories" },
           { word: "Vitamin", ipa: "/ˈvɪtəmɪn/", vi: "Vitamin", ex: "Rich vitamins" },
           { word: "Protein", ipa: "/ˈprəʊtiːn/", vi: "Protein", ex: "Good protein" },
-          { word: "Junk Food", ipa: "/dʒʌŋk fuːd/", vi: "Thức ăn bẩn", ex: "Bad health" },
+          { word: "Junk Food", ipa: "/dʒʌŋk fuːd/", vi: "Thức ăn bẩn", ex: "Avoid junk" },
           { word: "Stress", ipa: "/stres/", vi: "Căng thẳng", ex: "Too much stress" },
           { word: "Sleep", ipa: "/sliːp/", vi: "Ngủ", ex: "8 hours sleep" }
         ],
-        grammar: "Should/Have to",
+        grammar: "<h4>Should/Should not & Have to</h4><p><strong>Structure:</strong> S + should/shouldn't + V / S + have/has to + V</p><p><strong>Example:</strong> You should exercise. / I have to wake up early.</p><p><strong>When:</strong> Giving advice or stating obligations</p>",
         exercises: [
           { q: "You __________ eat vegetables", a: "should" },
-          { q: "I __________ wake up early", a: "have to" },
-          { q: "He __________ eat junk", a: "shouldn't" },
-          { q: "Athletes __________ train", a: "have to" },
-          { q: "You __________ follow diet", a: "don't have to" }
+          { q: "I __________ wake up early every day", a: "have to" },
+          { q: "He __________ eat junk food", a: "shouldn't" },
+          { q: "Athletes __________ train regularly", a: "have to" },
+          { q: "You __________ follow a strict diet", a: "don't have to" }
         ]
       },
       {
-        id: 4,
-        title: "Unit 4: Remembering Past",
-        level: "Intermediate+",
-        color: "linear-gradient(to right, rgb(196, 181, 253), rgb(168, 85, 247))",
-        progress: 95,
+        id: 4, title: "Unit 4: Remembering Past", level: "Intermediate+", color: "linear-gradient(to right, #c4b5fd, #a855f7)", progress: 95,
         vocab: [
           { word: "Remember", ipa: "/rɪˈmembər/", vi: "Nhớ", ex: "I remember" },
           { word: "Forget", ipa: "/fərˈɡet/", vi: "Quên", ex: "Never forget" },
@@ -233,13 +206,197 @@
           { word: "Era", ipa: "/ˈɪrə/", vi: "Thời kỳ", ex: "Stone Age" },
           { word: "Relic", ipa: "/ˈrelɪk/", vi: "Di vật", ex: "Ancient relic" }
         ],
-        grammar: "Simple Past",
+        grammar: "<h4>Simple Past & Used to</h4><p><strong>Structure:</strong> S + V-ed / S + used to + V</p><p><strong>Example:</strong> I visited yesterday. / She used to come here.</p><p><strong>When:</strong> Past completed actions or past habits</p>",
         exercises: [
-          { q: "I __________ temple yesterday", a: "visited" },
+          { q: "I __________ the temple yesterday", a: "visited" },
           { q: "She __________ every summer", a: "used to visit" },
-          { q: "They __________ ancient city", a: "explored" },
-          { q: "We __________ remember that", a: "will never" },
-          { q: "He __________ traditions", a: "preserved" }
+          { q: "They __________ the ancient city", a: "explored" },
+          { q: "We will never __________ that", a: "forget" },
+          { q: "He __________ traditions carefully", a: "preserved" }
+        ]
+      },
+      {
+        id: 5, title: "Unit 5: Our Experiences", level: "Intermediate", color: "linear-gradient(to right, #fb923c, #ea580c)", progress: 70,
+        vocab: [
+          { word: "Experience", ipa: "/ɪkˈspɪəriəns/", vi: "Kinh nghiệm", ex: "Great experience" },
+          { word: "Adventure", ipa: "/ədˈventʃər/", vi: "Cuộc phiêu lưu", ex: "Amazing adventure" },
+          { word: "Journey", ipa: "/ˈdʒɜːrni/", vi: "Hành trình", ex: "Long journey" },
+          { word: "Travel", ipa: "/ˈtrævl/", vi: "Du lịch", ex: "Travel around" },
+          { word: "Explore", ipa: "/ɪkˈsplɔːr/", vi: "Khám phá", ex: "Explore new places" },
+          { word: "Discover", ipa: "/dɪsˈkʌvər/", vi: "Phát hiện", ex: "Discover culture" },
+          { word: "Exciting", ipa: "/ɪkˈsaɪtɪŋ/", vi: "Kích thích", ex: "Exciting moment" },
+          { word: "Challenge", ipa: "/ˈtʃælɪndʒ/", vi: "Thử thách", ex: "Big challenge" },
+          { word: "Success", ipa: "/səkˈses/", vi: "Thành công", ex: "Great success" },
+          { word: "Memory", ipa: "/ˈmeməri/", vi: "Ký ức", ex: "Good memories" }
+        ],
+        grammar: "<h4>Present Perfect</h4><p><strong>Structure:</strong> S + have/has + V-ed</p><p><strong>Example:</strong> I have traveled to Asia. / She has visited Paris.</p><p><strong>When:</strong> Past experiences with present relevance</p>",
+        exercises: [
+          { q: "I __________ to many countries", a: "have been" },
+          { q: "She __________ this challenge successfully", a: "has overcome" },
+          { q: "How long __________ you lived here?", a: "have" },
+          { q: "We __________ amazing experiences", a: "have had" },
+          { q: "They __________ their journey yet", a: "haven't completed" }
+        ]
+      },
+      {
+        id: 6, title: "Unit 6: Vietnamese Lifestyle", level: "Intermediate", color: "linear-gradient(to right, #ec4899, #db2777)", progress: 80,
+        vocab: [
+          { word: "Lifestyle", ipa: "/ˈlaɪfstaɪl/", vi: "Lối sống", ex: "Traditional lifestyle" },
+          { word: "Culture", ipa: "/ˈkʌltʃər/", vi: "Văn hóa", ex: "Rich culture" },
+          { word: "Tradition", ipa: "/trəˈdɪʃn/", vi: "Truyền thống", ex: "Old tradition" },
+          { word: "Family", ipa: "/ˈfæməli/", vi: "Gia đình", ex: "Close family" },
+          { word: "Values", ipa: "/ˈvæljuːz/", vi: "Giá trị", ex: "Important values" },
+          { word: "Respect", ipa: "/rɪˈspekt/", vi: "Tôn trọng", ex: "Mutual respect" },
+          { word: "Harmony", ipa: "/ˈhɑːrməni/", vi: "Hòa hợp", ex: "Family harmony" },
+          { word: "Heritage", ipa: "/ˈherɪtɪdʒ/", vi: "Di sản", ex: "Cultural heritage" },
+          { word: "Modern", ipa: "/ˈmɑːdərn/", vi: "Hiện đại", ex: "Modern society" },
+          { word: "Blend", ipa: "/blend/", vi: "Trộn lẫn", ex: "Blend cultures" }
+        ],
+        grammar: "<h4>Superlatives & Comparatives</h4><p><strong>Structure:</strong> S + the most/est adj / S + more/er adj + than</p><p><strong>Example:</strong> Vietnam has the most traditions. / Food is healthier.</p><p><strong>When:</strong> Best/worst or comparing things</p>",
+        exercises: [
+          { q: "Vietnamese culture is very __________", a: "traditional" },
+          { q: "Family is the __________ important value", a: "most" },
+          { q: "Modern life is __________ than traditional", a: "faster" },
+          { q: "These are the __________ beautiful customs", a: "most" },
+          { q: "Our heritage is __________ to other countries", a: "similar" }
+        ]
+      },
+      {
+        id: 7, title: "Unit 7: Natural Wonders", level: "Advanced", color: "linear-gradient(to right, #22c55e, #16a34a)", progress: 60,
+        vocab: [
+          { word: "Nature", ipa: "/ˈneɪtʃər/", vi: "Thiên nhiên", ex: "Beautiful nature" },
+          { word: "Wonder", ipa: "/ˈwʌndər/", vi: "Kỳ tích", ex: "Natural wonder" },
+          { word: "Landscape", ipa: "/ˈlændskeɪp/", vi: "Phong cảnh", ex: "Stunning landscape" },
+          { word: "Mountain", ipa: "/ˈmaʊntn/", vi: "Núi", ex: "High mountain" },
+          { word: "River", ipa: "/ˈrɪvər/", vi: "Sông", ex: "Flowing river" },
+          { word: "Forest", ipa: "/ˈfɔːrɪst/", vi: "Rừng", ex: "Dense forest" },
+          { word: "Beach", ipa: "/biːtʃ/", vi: "Bãi biển", ex: "Sandy beach" },
+          { word: "Island", ipa: "/ˈaɪlənd/", vi: "Đảo", ex: "Tropical island" },
+          { word: "Wilderness", ipa: "/ˈwɪldərnəs/", vi: "Hoang dã", ex: "True wilderness" },
+          { word: "Preserve", ipa: "/prɪˈzɜːrv/", vi: "Bảo vệ", ex: "Preserve nature" }
+        ],
+        grammar: "<h4>Present Perfect Continuous & Passive Voice</h4><p><strong>Structure:</strong> S + have/has + been + V-ing / S + be + V-ed</p><p><strong>Example:</strong> I've been exploring. / The forest is protected.</p><p><strong>When:</strong> Ongoing actions or passive actions</p>",
+        exercises: [
+          { q: "This forest __________ protected by law", a: "is" },
+          { q: "We __________ exploring natural wonders", a: "have been" },
+          { q: "Mountains __________ formed millions of years ago", a: "were" },
+          { q: "The beach __________ cleaned by volunteers", a: "is being" },
+          { q: "Nature __________ carefully preserved", a: "should be" }
+        ]
+      },
+      {
+        id: 8, title: "Unit 8: Tourism", level: "Advanced", color: "linear-gradient(to right, #06b6d4, #0891b2)", progress: 75,
+        vocab: [
+          { word: "Tourism", ipa: "/ˈtʊrɪzəm/", vi: "Du lịch", ex: "Boost tourism" },
+          { word: "Tourist", ipa: "/ˈtʊrɪst/", vi: "Du khách", ex: "Many tourists" },
+          { word: "Destination", ipa: "/ˌdestɪˈneɪʃn/", vi: "Điểm đến", ex: "Popular destination" },
+          { word: "Resort", ipa: "/rɪˈzɔːrt/", vi: "Khu nghỉ dưỡng", ex: "Luxury resort" },
+          { word: "Attraction", ipa: "/əˈtrækʃn/", vi: "Điểm thu hút", ex: "Main attraction" },
+          { word: "Guide", ipa: "/ɡaɪd/", vi: "Hướng dẫn viên", ex: "Tour guide" },
+          { word: "Itinerary", ipa: "/aɪˈtɪnəreri/", vi: "Lịch trình", ex: "Detailed itinerary" },
+          { word: "Accommodation", ipa: "/əˌkɑːməˈdeɪʃn/", vi: "Chỗ ở", ex: "Good accommodation" },
+          { word: "Souvenir", ipa: "/ˌsuːvəˈnɪr/", vi: "Quà lưu niệm", ex: "Buy souvenir" },
+          { word: "Visa", ipa: "/ˈviːzə/", vi: "Visa", ex: "Get visa" }
+        ],
+        grammar: "<h4>Modals: Can, Could, May, Might</h4><p><strong>Structure:</strong> S + modal + V (bare)</p><p><strong>Example:</strong> You can visit. / You could try. / May I help?</p><p><strong>When:</strong> Ability, possibility, permission</p>",
+        exercises: [
+          { q: "You __________ visit the temples", a: "can" },
+          { q: "We __________ explore the city", a: "could" },
+          { q: "__________ I help you with the booking?", a: "may" },
+          { q: "It __________ rain tomorrow", a: "might" },
+          { q: "They __________ arrive late", a: "might" }
+        ]
+      },
+      {
+        id: 9, title: "Unit 9: World Englishes", level: "Advanced", color: "linear-gradient(to right, #f59e0b, #d97706)", progress: 65,
+        vocab: [
+          { word: "Language", ipa: "/ˈlæŋɡwɪdʒ/", vi: "Ngôn ngữ", ex: "English language" },
+          { word: "Dialect", ipa: "/ˈdaɪəlekt/", vi: "Phương ngữ", ex: "Regional dialect" },
+          { word: "Accent", ipa: "/ˈæksent/", vi: "Giọng", ex: "British accent" },
+          { word: "Pronunciation", ipa: "/prəˌnʌnsiˈeɪʃn/", vi: "Cách phát âm", ex: "Perfect pronunciation" },
+          { word: "Fluent", ipa: "/ˈfluːənt/", vi: "Lưu loát", ex: "Fluent speaker" },
+          { word: "Grammar", ipa: "/ˈɡræmər/", vi: "Ngữ pháp", ex: "English grammar" },
+          { word: "Vocabulary", ipa: "/vəˈkæbjuleri/", vi: "Từ vựng", ex: "Rich vocabulary" },
+          { word: "Expression", ipa: "/ɪkˈspreʃn/", vi: "Cách diễn đạt", ex: "Common expression" },
+          { word: "Idiom", ipa: "/ˈɪdiəm/", vi: "Thành ngữ", ex: "English idiom" },
+          { word: "Translation", ipa: "/trænzˈleɪʃn/", vi: "Dịch", ex: "Accurate translation" }
+        ],
+        grammar: "<h4>Reported Speech</h4><p><strong>Structure:</strong> S + said/told + that + clause</p><p><strong>Example:</strong> She said (that) she was tired.</p><p><strong>When:</strong> Reporting what someone said</p>",
+        exercises: [
+          { q: "She said __________ she was learning English", a: "that" },
+          { q: "He told me __________ come tomorrow", a: "to" },
+          { q: "They said __________ had finished", a: "they" },
+          { q: "She asked __________ I could help", a: "if" },
+          { q: "He explained __________ English was important", a: "that" }
+        ]
+      },
+      {
+        id: 10, title: "Unit 10: Planet Earth", level: "Advanced", color: "linear-gradient(to right, #8b5cf6, #7c3aed)", progress: 70,
+        vocab: [
+          { word: "Planet", ipa: "/ˈplænɪt/", vi: "Hành tinh", ex: "Our planet Earth" },
+          { word: "Environment", ipa: "/ɪnˈvaɪrənmənt/", vi: "Môi trường", ex: "Protect environment" },
+          { word: "Climate", ipa: "/ˈklaɪmət/", vi: "Khí hậu", ex: "Climate change" },
+          { word: "Pollution", ipa: "/pəˈluːʃn/", vi: "Ô nhiễm", ex: "Air pollution" },
+          { word: "Recycle", ipa: "/riːˈsaɪkl/", vi: "Tái chế", ex: "Recycle plastic" },
+          { word: "Sustainable", ipa: "/səˈsteɪnəbl/", vi: "Bền vững", ex: "Sustainable living" },
+          { word: "Carbon", ipa: "/ˈkɑːrbən/", vi: "Carbon", ex: "Carbon emissions" },
+          { word: "Global", ipa: "/ˈɡloʊbl/", vi: "Toàn cầu", ex: "Global warming" },
+          { word: "Ecosystem", ipa: "/ˈiːkoʊsɪstəm/", vi: "Hệ sinh thái", ex: "Fragile ecosystem" },
+          { word: "Renewable", ipa: "/rɪˈnjuːəbl/", vi: "Tái tạo được", ex: "Renewable energy" }
+        ],
+        grammar: "<h4>Conditional Sentences</h4><p><strong>Structure:</strong> If + present, will + V / If + past, would + V</p><p><strong>Example:</strong> If we recycle, we help Earth. / If we recycled, we would help.</p><p><strong>When:</strong> Real or hypothetical conditions</p>",
+        exercises: [
+          { q: "If we __________ pollution, Earth will be healthier", a: "reduce" },
+          { q: "If everyone __________ recycling, it would help", a: "started" },
+          { q: "__________ we act now, climate change will worsen", a: "if" },
+          { q: "We __________ our planet if we use renewable energy", a: "can save" },
+          { q: "Unless we __________, pollution will increase", a: "act" }
+        ]
+      },
+      {
+        id: 11, title: "Unit 11: Electronic Devices", level: "Advanced", color: "linear-gradient(to right, #06b6d4, #0d9488)", progress: 55,
+        vocab: [
+          { word: "Device", ipa: "/dɪˈvaɪs/", vi: "Thiết bị", ex: "Mobile device" },
+          { word: "Technology", ipa: "/tekˈnɑːlədʒi/", vi: "Công nghệ", ex: "Latest technology" },
+          { word: "Computer", ipa: "/kəmˈpjuːtər/", vi: "Máy tính", ex: "Desktop computer" },
+          { word: "Software", ipa: "/ˈsɔːftwer/", vi: "Phần mềm", ex: "Useful software" },
+          { word: "Hardware", ipa: "/ˈhɑːrdwer/", vi: "Phần cứng", ex: "New hardware" },
+          { word: "Internet", ipa: "/ˈɪntərnet/", vi: "Internet", ex: "High-speed internet" },
+          { word: "Application", ipa: "/ˌæplɪˈkeɪʃn/", vi: "Ứng dụng", ex: "Mobile application" },
+          { word: "Innovation", ipa: "/ˌɪnəˈveɪʃn/", vi: "Đổi mới", ex: "Tech innovation" },
+          { word: "Digital", ipa: "/ˈdɪdʒɪtl/", vi: "Số", ex: "Digital world" },
+          { word: "Artificial", ipa: "/ɑːrˈtɪfɪʃl/", vi: "Nhân tạo", ex: "Artificial Intelligence" }
+        ],
+        grammar: "<h4>Future Tenses</h4><p><strong>Structure:</strong> will + V / going to + V / present progressive</p><p><strong>Example:</strong> Technology will advance. / I'm going to buy a phone.</p><p><strong>When:</strong> Future plans, predictions, intentions</p>",
+        exercises: [
+          { q: "Technology __________ advance rapidly", a: "will" },
+          { q: "I __________ buy a new laptop next month", a: "am going to" },
+          { q: "They __________ developing AI next year", a: "will be" },
+          { q: "We __________ use more renewable energy", a: "are going to" },
+          { q: "Devices __________ become smarter", a: "will" }
+        ]
+      },
+      {
+        id: 12, title: "Unit 12: Career Choices", level: "Advanced", color: "linear-gradient(to right, #ec4899, #be185d)", progress: 50,
+        vocab: [
+          { word: "Career", ipa: "/kəˈrɪr/", vi: "Sự nghiệp", ex: "Successful career" },
+          { word: "Job", ipa: "/dʒɑːb/", vi: "Công việc", ex: "Find a job" },
+          { word: "Profession", ipa: "/prəˈfeʃn/", vi: "Nghề", ex: "Medical profession" },
+          { word: "Skill", ipa: "/skɪl/", vi: "Kỹ năng", ex: "Communication skills" },
+          { word: "Qualification", ipa: "/ˌkwɑːlɪfɪˈkeɪʃn/", vi: "Chứng chỉ", ex: "Important qualification" },
+          { word: "Interview", ipa: "/ˈɪntərvjuː/", vi: "Phỏng vấn", ex: "Job interview" },
+          { word: "Resume", ipa: "/ˈrezuːmeɪ/", vi: "Hồ sơ", ex: "Update resume" },
+          { word: "Salary", ipa: "/ˈsæləri/", vi: "Lương", ex: "Good salary" },
+          { word: "Promotion", ipa: "/prəˈmoʊʃn/", vi: "Thăng chức", ex: "Get promotion" },
+          { word: "Ambition", ipa: "/æmˈbɪʃn/", vi: "Tham vọng", ex: "High ambition" }
+        ],
+        grammar: "<h4>Present Perfect & Future Continuous</h4><p><strong>Structure:</strong> have/has + V-ed / will be + V-ing</p><p><strong>Example:</strong> I have worked here for 2 years. / I will be working tomorrow.</p><p><strong>When:</strong> Completed actions or ongoing future actions</p>",
+        exercises: [
+          { q: "I __________ worked in this company for 5 years", a: "have" },
+          { q: "She __________ studying the job requirements", a: "has been" },
+          { q: "By next week, __________ you finished the project?", a: "will have" },
+          { q: "We __________ developing new strategies next month", a: "will be" },
+          { q: "He __________ completed his training", a: "has" }
         ]
       }
     ];
@@ -255,10 +412,10 @@
         const tr = document.createElement("tr");
         tr.innerHTML = `
           <td style="color: #2563eb; font-weight: bold;">${v.word}</td>
-          <td style="font-size: 0.875rem; font-family: monospace;">${v.ipa}</td>
+          <td style="font-family: monospace;">${v.ipa}</td>
           <td><button class="btn" onclick="playAudio('${v.word}')">🔊</button></td>
           <td>${v.vi}</td>
-          <td>"${v.ex}"</td>
+          <td><em>"${v.ex}"</em></td>
         `;
         tbody.appendChild(tr);
       });
@@ -277,9 +434,9 @@
         const ex = document.createElement("div");
         ex.className = "exercise";
         ex.innerHTML = `
-          <div class="exercise-q">${e.q}</div>
-          <input type="text" id="ans${i}" placeholder="Answer">
-          ${showAnswers ? `<div class="exercise-a">✓ ${e.a}</div>` : ""}
+          <div class="exercise-q"><strong>${i + 1}.</strong> ${e.q}</div>
+          <input type="text" id="ans${i}" placeholder="Your answer">
+          ${showAnswers ? `<div class="exercise-a">✓ Answer: ${e.a}</div>` : ""}
         `;
         div.appendChild(ex);
       });
@@ -288,18 +445,22 @@
     function renderAll() {
       document.getElementById("title").textContent = currentUnit.title;
       document.getElementById("level").textContent = `Level: ${currentUnit.level}`;
-      document.getElementById("grammar").innerHTML = currentUnit.grammarDetail || `<p>${currentUnit.grammar}</p>`;
+      document.getElementById("grammarDiv").innerHTML = currentUnit.grammar;
       renderVocab();
       renderExercises();
     }
 
     function showTab(tab) {
       document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+      document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+      
       if (tab === "today") {
         document.getElementById("today-tab").classList.add("active");
+        document.querySelectorAll(".nav-btn")[0].classList.add("active");
         renderAll();
       } else if (tab === "units") {
         document.getElementById("units-tab").classList.add("active");
+        document.querySelectorAll(".nav-btn")[1].classList.add("active");
         const grid = document.getElementById("unitsGrid");
         grid.innerHTML = "";
         units.forEach(u => {
@@ -310,13 +471,16 @@
             currentUnit = u;
             showTab("today");
           };
-          card.innerHTML = `<h4>${u.title}</h4><p>${u.level}</p><div style="margin-top: 0.5rem;">${u.progress}% Complete</div>`;
+          card.innerHTML = `<h4>${u.title}</h4><p>${u.level}</p><div style="margin-top: 0.5rem;">📊 ${u.progress}%</div>`;
           grid.appendChild(card);
         });
       } else if (tab === "progress") {
         document.getElementById("progress-tab").classList.add("active");
+        document.querySelectorAll(".nav-btn")[2].classList.add("active");
         const div = document.getElementById("progressDiv");
-        div.innerHTML = units.map(u => `<p>${u.title}: ${u.progress}%</p>`).join("");
+        div.innerHTML = "<table style='width:100%'><tr><th>Unit</th><th>Progress</th></tr>" + 
+          units.map(u => `<tr><td>${u.title}</td><td><div style='background:#e5e7eb;height:20px;border-radius:4px;'><div style='background:#3b82f6;height:100%;width:${u.progress}%;border-radius:4px;'></div></div></td></tr>`).join("") + 
+          "</table>";
       }
     }
 
@@ -349,9 +513,9 @@
         document.getElementById("streak").textContent = stats.streak;
         document.getElementById("points").textContent = stats.points;
         document.getElementById("total").textContent = stats.total;
-        alert(`🎉 Perfect! All ${correct} answers correct! +50 points!`);
+        alert(`🎉 Perfect! All ${correct}/${currentUnit.exercises.length} answers correct! +50 points!`);
       } else {
-        alert(`✓ ${correct}/${currentUnit.exercises.length} correct!\n\nWrong answers will be highlighted.`);
+        alert(`✓ ${correct}/${currentUnit.exercises.length} correct!`);
         currentUnit.exercises.forEach((e, i) => {
           const input = document.getElementById(`ans${i}`);
           const userAnswer = input.value;
