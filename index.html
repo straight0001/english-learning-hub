@@ -142,12 +142,23 @@
           { word: "Participate", ipa: "/pɑːrˈtɪsɪpeɪt/", vi: "Tham gia", ex: "Everyone participates" }
         ],
         grammar: "Present Simple & There is/are",
+        grammarDetail: `
+          <h4>📌 Present Simple (Hiện tại đơn)</h4>
+          <p><strong>Cấu trúc:</strong> S + V (bare)</p>
+          <p><strong>Ví dụ:</strong> I volunteer in my community.</p>
+          <p><strong>Dùng khi:</strong> Hành động xảy ra thường xuyên</p>
+          
+          <h4 style="margin-top: 1rem;">📌 There is / There are</h4>
+          <p><strong>Cấu trúc:</strong> There is + N (singular) / There are + N (plural)</p>
+          <p><strong>Ví dụ:</strong> There is a community center. / There are many volunteers.</p>
+          <p><strong>Dùng khi:</strong> Chỉ sự tồn tại của người/vật</p>
+        `,
         exercises: [
-          { q: "My __________ is friendly", a: "community" },
-          { q: "We __________ at park", a: "gather" },
-          { q: "There __________ volunteers", a: "are" },
-          { q: "I __________ in community", a: "participate" },
-          { q: "We __________ events", a: "organize" }
+          { q: "My __________ is friendly", type: "fill", a: "community", options: [] },
+          { q: "Which word means 'Tình nguyện viên'?", type: "choice", a: "volunteer", options: ["neighbor", "volunteer", "local", "organize"] },
+          { q: "We __________ at the park every week", type: "fill", a: "gather", options: [] },
+          { q: "'There are many people' - 'are' ở đây dùng vì?", type: "choice", a: "plural", options: ["singular", "plural", "past tense", "negative"] },
+          { q: "I __________ in community activities", type: "fill", a: "participate", options: [] }
         ]
       },
       {
@@ -277,7 +288,7 @@
     function renderAll() {
       document.getElementById("title").textContent = currentUnit.title;
       document.getElementById("level").textContent = `Level: ${currentUnit.level}`;
-      document.getElementById("grammar").textContent = currentUnit.grammar;
+      document.getElementById("grammar").innerHTML = currentUnit.grammarDetail || `<p>${currentUnit.grammar}</p>`;
       renderVocab();
       renderExercises();
     }
