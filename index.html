@@ -314,14 +314,45 @@
       renderExercises();
     }
 
+    function normalizeAnswer(text) {
+      return text.toLowerCase().trim().replace(/[.,!?;:]/g, '').replace(/\s+/g, ' ');
+    }
+
+    function checkAnswer(userAnswer, correctAnswer) {
+      return normalizeAnswer(userAnswer) === normalizeAnswer(correctAnswer);
+    }
+
     function complete() {
-      stats.streak++;
-      stats.points += 50;
-      stats.total += 50;
-      document.getElementById("streak").textContent = stats.streak;
-      document.getElementById("points").textContent = stats.points;
-      document.getElementById("total").textContent = stats.total;
-      alert("🎉 Great job! +50 points!");
+      let correct = 0;
+      currentUnit.exercises.forEach((e, i) => {
+        const userAnswer = document.getElementById(`ans${i}`).value;
+        if (checkAnswer(userAnswer, e.a)) {
+          correct++;
+        }
+      });
+      
+      if (correct === currentUnit.exercises.length) {
+        stats.streak++;
+        stats.points += 50;
+        stats.total += 50;
+        document.getElementById("streak").textContent = stats.streak;
+        document.getElementById("points").textContent = stats.points;
+        document.getElementById("total").textContent = stats.total;
+        alert(`🎉 Perfect! All ${correct} answers correct! +50 points!`);
+      } else {
+        alert(`✓ ${correct}/${currentUnit.exercises.length} correct!\n\nWrong answers will be highlighted.`);
+        currentUnit.exercises.forEach((e, i) => {
+          const input = document.getElementById(`ans${i}`);
+          const userAnswer = input.value;
+          if (!checkAnswer(userAnswer, e.a)) {
+            input.style.background = '#fee2e2';
+            input.style.borderColor = '#dc2626';
+          } else {
+            input.style.background = '#dcfce7';
+            input.style.borderColor = '#16a34a';
+          }
+        });
+      }
     }
 
     renderAll();
